@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+# Netty TCP/UDP server configurations
+netty:
+  tcp:
+    ports: 5027,5028,5029
+  udp:
+    ports: 5027,5028,5029
+
+# Database connection settings
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gps_ingestion
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        show_sql: false
+        use_sql_comments: false
+    open-in-view: false
+  integration:
+    channel:
+      rawGpsDataChannel:
+        capacity: 1000
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    ai.shreds: INFO
+    org.springframework: INFO
+    io.netty: INFO
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  endpoint:
+    health:
+      show-details: when_authorized
+    metrics:
+      enabled: true
+    info:
+      enabled: true
