@@ -1,0 +1,61 @@
+server:
+  port: 0
+
+# Netty TCP/UDP server configurations - disabled for tests
+netty:
+  tcp:
+    ports: 
+  udp:
+    ports: 
+
+# Database connection settings - will be overridden by TestContainers
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test_db
+    username: test
+    password: test
+    hikari:
+      auto-commit: false # CRITICAL for @Transactional test support
+      maximum-pool-size: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+    open-in-view: false
+  integration:
+    channel:
+      rawGpsDataChannel:
+        capacity: 100
+
+# Test logging configuration
+logging:
+  level:
+    root: INFO
+    ai.shreds: DEBUG
+    org.springframework: INFO
+    org.hibernate: INFO
+    org.testcontainers: INFO
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    info:
+      enabled: true
